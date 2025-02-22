@@ -1,4 +1,4 @@
-                                                            Chat Platform Documentation
+Chat Platform Documentation
 
 Overview:
 Project Name: Web Group Chat App
@@ -28,10 +28,14 @@ Installation Steps
 - git clone https://github.com/Sushanth1425/websocket-backend.git
 2.	Navigate to the frontend folder
 - cd web-sockets-chat
-Run npm install to install the required dependencies.
+Run
+- npm install
+to install the required dependencies.
 3.	Navigate to the backend folder
 - cd websocket-backend
-Run npm install to install the backend dependencies.
+Run
+- npm install
+to install the backend dependencies.
 4.	Run the backend server
 In the backend folder, run:
 - node server.js 
@@ -61,4 +65,5 @@ Links
 -	Frontend Code - https://github.com/Sushanth1425/web-sockets-chat
 -	Backend Code - https://github.com/Sushanth1425/websocket-backend
 
-
+License
+- MIT License: This project is licensed under the MIT License. You can freely use, modify, and distribute it.
