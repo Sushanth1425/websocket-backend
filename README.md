@@ -1,4 +1,4 @@
-                                                                            Chat Platform Documentation
+                                                            Chat Platform Documentation
 
 Overview:
 Project Name: Web Group Chat App
