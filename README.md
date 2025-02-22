@@ -6,19 +6,19 @@ Version: 1.0
 This is a real-time, anonymous group chat application built using WebSockets, allowing seamless communication. The application uses React for the frontend and Node.js with WebSockets for the backend. It is designed to support fast, real-time communication with a focus on anonymity, ensuring users can communicate without revealing their identity.
 
 Key Features
-•	Anonymity: No user authentication required, ensuring complete anonymity for users.
-•	Real-time Communication: Instant messages between participants using WebSockets.
-•	Fast & Responsive: Optimized for real-time usage with minimal latency.
+1.	Anonymity: No user authentication required, ensuring complete anonymity for users.
+2.	Real-time Communication: Instant messages between participants using WebSockets.
+3.	Fast & Responsive: Optimized for real-time usage with minimal latency.
 
 Installation Requirements and Steps
 -->	Frontend Requirements
-•	Node.js (v14 or later)
-•	React (v17 or later)
-•	npm (v6 or later)
+1.	Node.js (v14 or later)
+2.	React (v17 or later)
+3.	npm (v6 or later)
 -->	Backend Requirements
-•	Node.js (v14 or later)
-•	Express.js
-•	WebSocket library
+1.	Node.js (v14 or later)
+2.	Express.js
+3.	WebSocket library
 
 Installation Steps
 1.	Clone the repositories
@@ -44,21 +44,21 @@ to launch the React application.
 The application will be accessible at http://localhost:3000/.
 
 Contributors
-•	Sushanth B
+1.	Sushanth B
 -	GitHub: https://github.com/Sushanth1425
 -	LinkedIn: https://www.linkedin.com/in/sushanth-balasekaran-6294b0248/
-•	Mokshitha B
+2.	Mokshitha B
 -	GitHub: https://github.com/Mokshitha-B
 -	LinkedIn: https://www.linkedin.com/in/mokshitha-busi-25ba1332b/
-•	Dinesh Sathvik
+3.	Dinesh Sathvik
 -	GitHub: https://github.com/bloodwolf-debug
   
 Tech Stack
-•	Frontend: React.js, Tailwind CSS
-•	Backend: Node.js, Express, WebSocket Library
+-	Frontend: React.js, Tailwind CSS
+-	Backend: Node.js, Express, WebSocket Library
 
 Links
-•	Frontend Code - https://github.com/Sushanth1425/web-sockets-chat
-•	Backend Code - https://github.com/Sushanth1425/websocket-backend
+-	Frontend Code - https://github.com/Sushanth1425/web-sockets-chat
+-	Backend Code - https://github.com/Sushanth1425/websocket-backend
 
 
