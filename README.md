@@ -11,11 +11,11 @@ Key Features
 3.	Fast & Responsive: Optimized for real-time usage with minimal latency.
 
 Installation Requirements and Steps
--->	Frontend Requirements
+-	Frontend Requirements
 1.	Node.js (v14 or later)
 2.	React (v17 or later)
 3.	npm (v6 or later)
--->	Backend Requirements
+-	Backend Requirements
 1.	Node.js (v14 or later)
 2.	Express.js
 3.	WebSocket library
@@ -23,22 +23,22 @@ Installation Requirements and Steps
 Installation Steps
 1.	Clone the repositories
 * Frontend repository:
---> git clone https://github.com/Sushanth1425/web-sockets-chat.git
+- git clone https://github.com/Sushanth1425/web-sockets-chat.git
 * Backend repository:
---> git clone https://github.com/Sushanth1425/websocket-backend.git
+- git clone https://github.com/Sushanth1425/websocket-backend.git
 2.	Navigate to the frontend folder
---> cd web-sockets-chat
+- cd web-sockets-chat
 Run npm install to install the required dependencies.
 3.	Navigate to the backend folder
---> cd websocket-backend
+- cd websocket-backend
 Run npm install to install the backend dependencies.
 4.	Run the backend server
 In the backend folder, run:
---> node server.js 
+- node server.js 
 to launch the WebSocket server.
 5.	Run the frontend application
 In the frontend folder, run:
---> npm start 
+- npm start 
 to launch the React application.
 6.	Access the App
 The application will be accessible at http://localhost:3000/.
