@@ -34,10 +34,19 @@ const saveMessages = (roomID, messages) => {
   fs.writeFileSync(filePath, JSON.stringify(messages, null, 2));
 };
 
+// Store clients by roomID
+const roomClients = new Map();
+
 // Handle new WebSocket connections
 wss.on("connection", (ws, req) => {
-  const roomID = req.url.slice(1);
+  const roomID = req.url.slice(1);  // Extract roomID from the URL
   let username = "";
+
+  // Add the client to the room's client list
+  if (!roomClients.has(roomID)) {
+    roomClients.set(roomID, new Set());
+  }
+  roomClients.get(roomID).add(ws);
 
   // Send previous messages to the user
   const messages = loadMessages(roomID);
@@ -62,8 +71,8 @@ wss.on("connection", (ws, req) => {
       messages.push(joinMessage);
       saveMessages(roomID, messages);
 
-      // Broadcast the join message
-      wss.clients.forEach((client) => {
+      // Broadcast the join message only to clients in the same room
+      roomClients.get(roomID).forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(joinMessage));
         }
@@ -77,8 +86,8 @@ wss.on("connection", (ws, req) => {
       messages.push(userMessage);
       saveMessages(roomID, messages);
 
-      // **Send only the raw message to all clients**
-      wss.clients.forEach((client) => {
+      // **Send the message only to clients in the same room**
+      roomClients.get(roomID).forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(userMessage));
         }
@@ -98,7 +107,11 @@ wss.on("connection", (ws, req) => {
       messages.push(leaveMessage);
       saveMessages(roomID, messages);
 
-      wss.clients.forEach((client) => {
+      // Remove client from the room's client list
+      roomClients.get(roomID).delete(ws);
+
+      // Broadcast the leave message only to clients in the same room
+      roomClients.get(roomID).forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(leaveMessage));
         }
