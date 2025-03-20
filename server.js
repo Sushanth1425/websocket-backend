@@ -1,21 +1,46 @@
 const WebSocket = require("ws");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
-// WebSocket server
+const encryptionKey = 'bZ1ufMGIh54MyBX9l2NsxCqKX9yiYsbP'; 
+const ivLength = 16; 
+const algorithm = 'aes-256-cbc'; 
+
 const wss = new WebSocket.Server({ port: 8080 });
-
-// Helper function to get the file path for each room
 const getRoomFilePath = (roomID) =>
   path.join(__dirname, "data", `${roomID}.json`);
 
-// Load existing messages for a room
+const getValidEncryptionKey = (key) => {
+  return crypto.createHash('sha256').update(key).digest(); 
+};
+
+const encrypt = (text) => {
+  const iv = crypto.randomBytes(ivLength); 
+  const cipher = crypto.createCipheriv(algorithm, getValidEncryptionKey(encryptionKey), iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return iv.toString('hex') + ':' + encrypted; 
+};
+
+const decrypt = (encryptedText) => {
+  const [iv, encrypted] = encryptedText.split(':');
+  const decipher = crypto.createDecipheriv(algorithm, getValidEncryptionKey(encryptionKey), Buffer.from(iv, 'hex'));
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+};
+
 const loadMessages = (roomID) => {
   const filePath = getRoomFilePath(roomID);
   if (fs.existsSync(filePath)) {
     try {
       const data = fs.readFileSync(filePath, "utf8");
-      return data.trim() ? JSON.parse(data) : [];
+      const messages = data.trim() ? JSON.parse(data) : [];
+      return messages.map(msg => ({
+        ...msg,
+        msg: decrypt(msg.msg), 
+      }));
     } catch (error) {
       console.error(`Error parsing JSON for room ${roomID}:`, error);
       return [];
@@ -24,31 +49,32 @@ const loadMessages = (roomID) => {
   return [];
 };
 
-// Save messages to the JSON file for a room
 const saveMessages = (roomID, messages) => {
   const filePath = getRoomFilePath(roomID);
   const dirPath = path.dirname(filePath);
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
-  fs.writeFileSync(filePath, JSON.stringify(messages, null, 2));
+
+  const encryptedMessages = messages.map(msg => ({
+    ...msg,
+    msg: encrypt(msg.msg), 
+  }));
+
+  fs.writeFileSync(filePath, JSON.stringify(encryptedMessages, null, 2));
 };
 
-// Store clients by roomID
 const roomClients = new Map();
 
-// Handle new WebSocket connections
 wss.on("connection", (ws, req) => {
-  const roomID = req.url.slice(1);  // Extract roomID from the URL
+  const roomID = req.url.slice(1);  
   let username = "";
 
-  // Add the client to the room's client list
   if (!roomClients.has(roomID)) {
     roomClients.set(roomID, new Set());
   }
   roomClients.get(roomID).add(ws);
 
-  // Send previous messages to the user
   const messages = loadMessages(roomID);
   ws.send(JSON.stringify({ type: "history", messages }));
 
@@ -58,35 +84,29 @@ wss.on("connection", (ws, req) => {
     }
 
     if (!username) {
-      username = message; // First message is the username
-
+      username = message; 
       const joinMessage = {
         sender: "",
         roomID,
         msg: `${username} has joined the chat`,
       };
 
-      // Append the join message
       const messages = loadMessages(roomID);
       messages.push(joinMessage);
       saveMessages(roomID, messages);
 
-      // Broadcast the join message only to clients in the same room
       roomClients.get(roomID).forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(joinMessage));
         }
       });
     } else {
-      // **Fixing double-stringification issue**
       const userMessage = { sender: username, roomID, msg: message };
 
-      // Save the message
       const messages = loadMessages(roomID);
       messages.push(userMessage);
       saveMessages(roomID, messages);
 
-      // **Send the message only to clients in the same room**
       roomClients.get(roomID).forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(userMessage));
@@ -106,11 +126,7 @@ wss.on("connection", (ws, req) => {
       const messages = loadMessages(roomID);
       messages.push(leaveMessage);
       saveMessages(roomID, messages);
-
-      // Remove client from the room's client list
       roomClients.get(roomID).delete(ws);
-
-      // Broadcast the leave message only to clients in the same room
       roomClients.get(roomID).forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(leaveMessage));
