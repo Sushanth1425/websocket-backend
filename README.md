@@ -47,15 +47,6 @@ to launch the React application.
 6.	Access the App
 The application will be accessible at http://localhost:3000/.
 
-Contributors
-1.	Sushanth B
--	GitHub: https://github.com/Sushanth1425
--	LinkedIn: https://www.linkedin.com/in/sushanth-balasekaran-6294b0248/
-2.	Mokshitha B
--	GitHub: https://github.com/Mokshitha-B
--	LinkedIn: https://www.linkedin.com/in/mokshitha-busi-25ba1332b/
-3.	Dinesh Sathvik
--	GitHub: https://github.com/bloodwolf-debug
   
 Tech Stack
 -	Frontend: React.js, Tailwind CSS
